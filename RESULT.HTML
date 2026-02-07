@@ -1,125 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Gemini | Cognitive Analysis</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { background: #000; color: #00ffb3; font-family: 'Orbitron', sans-serif; }
-        .glass-panel { background: rgba(0, 20, 10, 0.8); border: 1px solid #00ffb3; box-shadow: 0 0 20px rgba(0, 255, 179, 0.2); }
-        .loading-shimmer { background: linear-gradient(90deg, #001a11 25%, #00ffb333 50%, #001a11 75%); background-size: 200% 100%; animation: shimmer 2s infinite; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    </style>
+<meta charset="UTF-8">
+<title>Gemini | Cognitive Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    background: radial-gradient(circle at top, #00110a, #000);
+    color: #00ffb3;
+    font-family: 'Orbitron', sans-serif;
+}
+.glass {
+    background: rgba(0, 25, 15, 0.75);
+    border: 1px solid #00ffb3;
+    box-shadow: 0 0 25px rgba(0,255,179,0.2);
+}
+.progress {
+    background: #003322;
+}
+.progress-fill {
+    background: linear-gradient(90deg,#00ffb3,#00bfff);
+}
+</style>
 </head>
+
 <body class="p-6 md:p-10">
-    <div class="max-w-4xl mx-auto">
-        <h1 class="text-2xl md:text-3xl mb-8 text-center tracking-widest uppercase font-bold">
-            Neural Analysis <span class="text-white">Active</span>
-        </h1>
-        
-        <div class="glass-panel p-6 rounded-2xl mb-8">
-            <canvas id="loadChart" style="max-height: 400px;"></canvas>
-        </div>
 
-        <div id="aiInsightBox" class="glass-panel p-6 rounded-xl border-blue-500 mb-8 min-h-[100px]">
-            <h3 class="text-blue-400 text-xs font-bold uppercase tracking-widest mb-3 italic">Gemini Systems Report:</h3>
-            <div id="aiContent" class="text-sm leading-relaxed text-zinc-300">
-                <div class="loading-shimmer h-4 w-3/4 rounded mb-2"></div>
-                <div id="statusText" class="text-[10px] animate-pulse">Initializing Neural Link...</div>
+<div class="max-w-5xl mx-auto space-y-10">
+
+<h1 class="text-center text-3xl md:text-4xl font-bold tracking-widest">
+    GEMINI <span class="text-white">NEURAL STUDY SYSTEM</span>
+</h1>
+
+<!-- CHART -->
+<div class="glass p-6 rounded-2xl">
+    <canvas id="stressChart"></canvas>
+</div>
+
+<!-- AI REPORT -->
+<div class="glass p-6 rounded-xl">
+    <h3 class="text-xs tracking-widest uppercase text-blue-400 mb-3">AI Cognitive Report</h3>
+    <p id="aiReport" class="text-sm text-zinc-300 leading-relaxed"></p>
+</div>
+
+<!-- BUTTON -->
+<button onclick="generatePlanner()" id="planBtn"
+class="w-full py-4 bg-gradient-to-r from-blue-600 to-green-500 text-black font-bold rounded-xl tracking-[0.25em] hover:scale-105 transition">
+PLAN MY WEEK
+</button>
+
+<!-- WEEKLY PLANNER -->
+<div id="planner" class="hidden glass p-6 rounded-2xl space-y-6">
+
+<h2 class="text-xl font-bold tracking-widest text-center">WEEKLY AI PLANNER</h2>
+
+<div id="schedule" class="grid md:grid-cols-2 gap-4"></div>
+
+<h3 class="text-lg font-bold tracking-widest mt-6">🎮 GAMIFIED TASKS</h3>
+<div id="tasks" class="space-y-4"></div>
+
+</div>
+
+</div>
+
+<script>
+// ------------------ DUMMY DATA ------------------
+const studentData = {
+    name: "Aman",
+    branch: "Computer Science Engineering",
+    modules: [
+        { name: "Data Structures", level: "weak" },
+        { name: "Operating Systems", level: "average" },
+        { name: "DBMS", level: "strong" },
+        { name: "Computer Networks", level: "weak" },
+        { name: "Mathematics", level: "average" }
+    ]
+};
+
+// ------------------ CHART ------------------
+const ctx = document.getElementById("stressChart");
+new Chart(ctx, {
+    type: 'radar',
+    data: {
+        labels: studentData.modules.map(m => m.name),
+        datasets: [{
+            data: studentData.modules.map(m =>
+                m.level === "weak" ? 90 : m.level === "average" ? 60 : 30
+            ),
+            backgroundColor: 'rgba(0,255,179,0.2)',
+            borderColor: '#00ffb3',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: {
+            r: {
+                grid: { color: "#1a3a30" },
+                pointLabels: { color: "#00ffb3" },
+                ticks: { display: false }
+            }
+        }
+    }
+});
+
+// ------------------ AI REPORT ------------------
+const weak = studentData.modules.filter(m => m.level === "weak").map(m => m.name);
+const avg = studentData.modules.filter(m => m.level === "average").map(m => m.name);
+
+document.getElementById("aiReport").innerHTML = `
+Student <b>${studentData.name}</b> shows cognitive overload in 
+<b>${weak.join(", ")}</b>.  
+Average stability observed in <b>${avg.join(", ")}</b>.  
+Recommended strategy: 2 focused deep-work blocks/day for weak subjects,
+1 reinforcement session for average subjects, and light revision for strong modules.
+`;
+
+// ------------------ PLANNER ------------------
+function generatePlanner() {
+    document.getElementById("planner").classList.remove("hidden");
+
+    const schedule = document.getElementById("schedule");
+    schedule.innerHTML = "";
+
+    const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+
+    days.forEach(day => {
+        schedule.innerHTML += `
+        <div class="glass p-4 rounded-xl">
+            <h4 class="font-bold mb-2">${day}</h4>
+            <ul class="text-sm space-y-1 text-zinc-300">
+                <li>⏱ 07:00 – 08:30 → ${weak[0]}</li>
+                <li>⏱ 17:00 – 18:00 → ${avg[0]}</li>
+                <li>⏱ 21:00 – 21:30 → Revision</li>
+            </ul>
+        </div>`;
+    });
+
+    generateTasks();
+}
+
+// ------------------ TASK MANAGER ------------------
+function generateTasks() {
+    const tasks = document.getElementById("tasks");
+    tasks.innerHTML = "";
+
+    weak.forEach(subject => {
+        tasks.innerHTML += `
+        <div class="glass p-4 rounded-xl">
+            <div class="flex justify-between mb-2">
+                <span>${subject} Practice</span>
+                <span class="text-xs text-green-400">+50 XP</span>
             </div>
-        </div>
+            <div class="progress h-3 rounded">
+                <div class="progress-fill h-3 rounded w-[40%]"></div>
+            </div>
+        </div>`;
+    });
+}
+</script>
 
-        <button onclick="generateFinalPlan()" id="planBtn" class="w-full py-5 bg-gradient-to-r from-blue-600 to-green-500 text-white font-bold rounded-xl transition shadow-lg uppercase tracking-[0.3em] opacity-50 cursor-not-allowed" disabled>
-            Plan My Week
-        </button>
-    </div>
-
-    <script>
-        // 1. DATA RECOVERY
-        const rawData = localStorage.getItem('loadmap_data');
-        const data = JSON.parse(rawData);
-        
-        // PASTE YOUR API KEY HERE
-        const API_KEY = "YOUR_GEMINI_API_KEY_HERE"; 
-
-        // 2. CHART LOGIC
-        function initChart() {
-            if(!data || !data.modules) return;
-            const ctx = document.getElementById('loadChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'radar',
-                data: {
-                    labels: data.modules.map(m => m.name),
-                    datasets: [{
-                        label: 'Stress Index',
-                        data: data.modules.map(m => m.level === 'weak' ? 95 : (m.level === 'average' ? 65 : 35)),
-                        backgroundColor: 'rgba(0, 255, 179, 0.2)',
-                        borderColor: '#00ffb3',
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    scales: { r: { grid: { color: '#1a3a30' }, ticks: { display: false }, pointLabels: { color: '#00ffb3' } } },
-                    plugins: { legend: { display: false } }
-                }
-            });
-        }
-
-        // 3. UNLOCK BUTTON UTILITY
-        function unlockSystem() {
-            const btn = document.getElementById('planBtn');
-            btn.disabled = false;
-            btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            btn.classList.add('hover:scale-105', 'active:scale-95', 'cursor-pointer');
-        }
-
-        // 4. THE ANALYSIS CALL
-        async function getAnalysis() {
-            const display = document.getElementById('aiContent');
-            
-            if (!API_KEY || API_KEY.includes("YOUR_API")) {
-                display.innerHTML = "SYSTEM NOTE: No API Key detected. Running Local Heuristics... <br><br> Your profile suggests high density in " + data.modules[0].name + ". Recommend 90-minute focus blocks.";
-                unlockSystem();
-                return;
-            }
-
-            try {
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: `Analyze this student profile and give a 3-sentence engineering study strategy: ${JSON.stringify(data)}` }] }]
-                    })
-                });
-
-                const result = await response.json();
-                if(result.candidates) {
-                    display.innerHTML = result.candidates[0].content.parts[0].text;
-                } else {
-                    throw new Error("Limit Reached");
-                }
-            } catch (e) {
-                display.innerHTML = "Neural Link Offline. Local Backup: Focus on 'Weak' modules first to flatten the stress curve.";
-            } finally {
-                unlockSystem();
-            }
-        }
-
-        function generateFinalPlan() {
-            window.location.href = 'planner.html';
-        }
-
-        window.onload = () => {
-            if(!data) {
-                alert("No data found. Redirecting to setup...");
-                window.location.href = "setup.html";
-                return;
-            }
-            initChart();
-            getAnalysis();
-        };
-    </script>
 </body>
 </html>
