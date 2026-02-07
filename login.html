@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deltabro | AI Student Login</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: radial-gradient(circle at top, #0f2027, #000);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #e0ffe0;
+      overflow: hidden;
+    }
+
+    /* ===== Floating Grid Background ===== */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        90deg,
+        rgba(0,255,170,0.05) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        rgba(0,255,170,0.05) 1px,
+        transparent 1px
+      );
+      background-size: 40px 40px;
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      from { transform: translate(0,0); }
+      to { transform: translate(-40px,-40px); }
+    }
+
+    /* ===== Layout Container ===== */
+    .main-wrapper {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      max-width: 1200px;
+      width: 100%;
+      padding: 20px;
+    }
+
+    /* ===== Left Logo Section ===== */
+    .brand-section {
+      text-align: center;
+      flex: 1;
+      max-width: 500px;
+    }
+
+    .main-logo {
+      width: 100%;
+      max-width: 400px; /* Adjust size here */
+      filter: drop-shadow(0 0 20px rgba(0, 255, 157, 0.4));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .tagline {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      color: #0aff9d;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(10, 255, 157, 0.5);
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    /* ===== Login Box ===== */
+    .login-box {
+      width: 360px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 40px rgba(0,255,170,0.2);
+      border: 1px solid rgba(0,255,170,0.2);
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #fff;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-size: 10px;
+      color: #0aff9d;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(10, 255, 157, 0.3);
+      border-radius: 6px;
+      color: #fff;
+      outline: none;
+      font-size: 13px;
+    }
+
+    input:focus {
+      border-color: #0aff9d;
+      box-shadow: 0 0 10px rgba(10, 255, 157, 0.2);
+    }
+
+    input[readonly] {
+      color: #888;
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .access-btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #0aff9d, #00b3ff);
+      color: #000;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s;
+    }
+
+    .access-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 25px rgba(10, 255, 157, 0.5);
+    }
+
+    .error-msg {
+      color: #ff4d4d;
+      font-size: 10px;
+      margin-top: 8px;
+      text-align: center;
+      display: none;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 850px) {
+      .main-wrapper {
+        flex-direction: column;
+        gap: 30px;
+      }
+      .main-logo { max-width: 250px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="main-wrapper">
+
+    <div class="brand-section">
+      <img src="logo.png.png" alt="Deltabro Logo" class="main-logo">
+      <h3 class="tagline">Login Fast, Plan Your Life</h3>
+    </div>
+
+    <div class="login-box">
+      <h2>SYSTEM ACCESS</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label>Student Name</label>
+          <input type="text" value="Aman" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Institution</label>
+          <input type="text" value="XYZ Institute of Technology" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Academic Branch</label>
+          <input type="text" value="Computer Science Engineering" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Target Email</label>
+          <input type="email" value="aman@example.com" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>System Password</label>
+          <input type="password" id="passwordInput" placeholder="••••••••" required>
+          <p id="errorMessage" class="error-msg">Access Denied: Invalid Key</p>
+        </div>
+
+        <button type="button" class="access-btn" onclick="validateAndLogin()">
+          Initialize Session
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    function validateAndLogin() {
+      const password = document.getElementById('passwordInput').value;
+      const errorMsg = document.getElementById('errorMessage');
+      
+      if (password === '123456') {
+        window.location.href = 'dashboard.html';
+      } else {
+        errorMsg.style.display = 'block';
+        const input = document.getElementById('passwordInput');
+        input.style.borderColor = '#ff4d4d';
+        
+        // Shake effect
+        input.style.transform = 'translateX(5px)';
+        setTimeout(() => input.style.transform = 'translateX(-5px)', 50);
+        setTimeout(() => input.style.transform = 'translateX(0)', 100);
+      }
+    }
+  </script>
+
+</body>
+</html>

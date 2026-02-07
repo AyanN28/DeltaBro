@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoadMap | Weekly Routine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon-blue: #3b82f6; --bg-dark: #09090b; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-dark); color: #fafafa; overflow-x: hidden; }
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* GRID BACKGROUND */
+        .grid-bg { 
+            background-image: radial-gradient(#27272a 1px, transparent 1px); 
+            background-size: 30px 30px; 
+        }
+
+        /* TABLE STYLING */
+        .table-container { 
+            background: rgba(24, 24, 27, 0.85); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid #27272a; 
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        th { 
+            background: #111113; color: var(--neon-blue); 
+            font-size: 10px; text-transform: uppercase; 
+            letter-spacing: 0.2em; padding: 1.5rem; 
+            border-bottom: 1px solid #27272a;
+        }
+        td { 
+            padding: 1rem; border: 0.5px solid #1f1f23; 
+            text-align: center; font-size: 11px; 
+        }
+        .time-col { 
+            background: #0c0c0e; color: #52525b; 
+            font-weight: bold; width: 100px; 
+            font-family: 'Space Grotesk';
+        }
+
+        /* DYNAMIC CHIPS */
+        .chip-study { 
+            background: rgba(59, 130, 246, 0.1); 
+            border: 1px solid rgba(59, 130, 246, 0.4); 
+            color: #93c5fd; padding: 5px 10px; 
+            border-radius: 6px; font-weight: 600; 
+        }
+        .chip-rest { color: #3f3f46; font-style: italic; }
+
+        /* AI ROBOT ANIMATION */
+        .robot-container { position: fixed; bottom: 30px; right: 30px; z-index: 50; }
+        .bot-head { 
+            width: 55px; height: 48px; background: #020617; 
+            border: 2px solid var(--neon-blue); border-radius: 12px; 
+            position: relative; box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+        .eye { 
+            width: 7px; height: 7px; background: var(--neon-blue); 
+            border-radius: 50%; position: absolute; top: 16px; 
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        .eye.left { left: 12px; } .eye.right { right: 12px; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    </style>
+</head>
+<body class="min-h-screen grid-bg p-6 md:p-12">
+
+    <div class="robot-container">
+        <div class="bot-head">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+        </div>
+        <p class="text-[8px] text-blue-400 mt-2 font-bold uppercase tracking-widest text-center">Optimized</p>
+    </div>
+
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="h-[1px] w-10 bg-blue-600"></span>
+                    <span class="text-blue-500 text-[10px] font-bold uppercase tracking-[0.4em]">Phase 03: Execution</span>
+                </div>
+                <h1 class="heading-font text-4xl font-bold tracking-tighter uppercase italic text-white">
+                    Weekly <span class="text-blue-600">Routine</span>
+                </h1>
+                <p id="userNameDisplay" class="text-zinc-500 text-xs mt-2 uppercase tracking-widest italic"></p>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="window.location.href='analysis.html'" class="px-6 py-2 border border-zinc-800 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-zinc-900 transition">
+                    &larr; Analysis
+                </button>
+                <button onclick="window.print()" class="px-6 py-2 bg-blue-600 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-blue-500 transition shadow-lg shadow-blue-900/20">
+                    Export PDF
+                </button>
+            </div>
+        </header>
+
+        <div class="table-container overflow-hidden">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="time-col">Time (IST)</th>
+                        <th>Monday</th>
+                        <th>Tuesday</th>
+                        <th>Wednesday</th>
+                        <th>Thursday</th>
+                        <th>Friday</th>
+                        <th>Saturday</th>
+                        <th>Sunday</th>
+                    </tr>
+                </thead>
+                <tbody id="routineTableBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <footer class="mt-12 border-t border-zinc-900 pt-6 flex justify-between items-center">
+            <p class="text-[9px] text-zinc-600 uppercase tracking-widest">LoadMap Neural Engine v2.0</p>
+            <p class="text-[9px] text-zinc-600 uppercase tracking-widest">Status: Ready for Deployment</p>
+        </footer>
+    </div>
+
+    <script>
+        // 1. DATA RECOVERY
+        const rawData = localStorage.getItem('loadmap_data');
+        const data = JSON.parse(rawData);
+
+        // Update User Heading
+        if(data) {
+            document.getElementById('userNameDisplay').textContent = `${data.name || 'Student'} | ${data.college || 'Institution'}`;
+        }
+
+        // 2. DUMMY DATA STRUCTURE (Professional Engineering Focus)
+        const weeklyData = [
+            { time: "08:00 AM", tasks: ["Deep Work: Math", "Logic Design", "Deep Work: Math", "Logic Design", "Deep Work: Math", "Project Lab", "Rest"] },
+            { time: "10:30 AM", tasks: ["Signal Systems", "Data Structures", "Signal Systems", "Data Structures", "Revision", "Project Lab", "Sync"] },
+            { time: "01:00 PM", tasks: ["Break", "Break", "Break", "Break", "Break", "Break", "Brunch"] },
+            { time: "02:30 PM", tasks: ["Lab Session", "Problem Set", "Lab Session", "Problem Set", "Library", "Free Time", "Review"] },
+            { time: "05:00 PM", tasks: ["Weak Area 01", "Weak Area 02", "Weak Area 01", "Weak Area 02", "Weak Area 01", "Social", "Free"] },
+            { time: "08:00 PM", tasks: ["Daily Review", "Light Recap", "Daily Review", "Light Recap", "Quiz Prep", "Movie", "Plan Week"] }
+        ];
+
+        // 3. TABLE INJECTION
+        function initRoutine() {
+            const tbody = document.getElementById('routineTableBody');
+            
+            weeklyData.forEach(row => {
+                const tr = document.createElement('tr');
+                
+                let cells = `<td class="time-col">${row.time}</td>`;
+                row.tasks.forEach(task => {
+                    const isRest = ["Break", "Rest", "Free", "Movie", "Social", "Brunch"].some(word => task.includes(word));
+                    const cellContent = isRest 
+                        ? `<span class="chip-rest">${task}</span>` 
+                        : `<div class="chip-study">${task}</div>`;
+                    
+                    cells += `<td>${cellContent}</td>`;
+                });
+                
+                tr.innerHTML = cells;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Run on load
+        window.onload = initRoutine;
+    </script>
+</body>
+</html>
